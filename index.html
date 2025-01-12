@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentorship Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <!-- <iframe src="navbar.html" scrolling="no" style="border: none; width: 100%; height: auto; z-index: 3;"></iframe> -->
+    <nav>
+        <div id="navbar-container"></div>
+    </nav>
+    <!-- Hero Section -->
+    <main>
+        <section class="intro">
+            <div class="intro-container">
+                <h2 style="color: orange;">Welcome to </h2>
+                <h2 style="color: orange;">Mentorship Platform</h2>
+                <p>Your journey to finding the perfect mentor or mentee begins here. Connect, learn, and grow together!
+                </p>
+            </div>
+        </section>
+
+        <!-- Buttons Section -->
+        <section class="buttons">
+            <div class="section-container">
+                <div class="button">
+                    <button class="btn"><a style="font-style: normal; color: white;" href="Login.html">Login</a></button>
+                    <button class="btn"><a style="font-style: normal; color: white;" href="#Login.html">Connect withexperites</a></button>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="search">
+            <h1>Search the Your Mentor or Mentee</h1>
+            <div class="section-container">
+                <div class="search-bar">
+                    <input type="text" id="userSearch" placeholder="Search for an existing user...">
+                    <button class="btn" id="searchBtn" onclick="filterUsers()">Search</button>
+                </div>
+                <ul id="userList" class="user-list">
+                    <li></li>
+                    <!-- List of users will appear here -->
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div id="footer-container"></div>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+        let allUsers = [];
+
+fetch('https://mentorship-platfrom-backend.vercel.app/api/users/')
+  .then((response) => response.json())
+  .then((data1) => {
+    allUsers = data1; // Store all users for filtering
+    renderUserList(allUsers);
+  })
+  .catch((error) => console.error('Error fetching user data:', error));
+
+// Render user list
+function renderUserList(users) {
+  const userList = document.getElementById('userList');
+  let userHTML = '';
+  users.forEach((user) => {
+    userHTML += `
+      <li>
+        <a href="profile.html?usernameid=${encodeURIComponent(user.user_id)}" class="user-link">
+        <span class="username">${user.username}</span>
+        </a>
+        <span class="role">${user.role}</span>
+        <span class="experience">(${user.year_experience} years)</span>
+      </li>`;
+  });
+  userList.innerHTML = userHTML;
+}
+
+// Filter users based on the search input
+function filterUsers() {
+  const searchValue = document.getElementById('userSearch').value.toLowerCase();
+  const filteredUsers = allUsers.filter((user) =>
+    `${user.username} ${user.role} ${user.year_experience}`
+      .toLowerCase()
+      .includes(searchValue)
+  );
+  
+  renderUserList(filteredUsers);
+}
+    </script>
+
+<script>
+    function setupLoginLogout() {
+            const loginLink = document.getElementById("loginLink");
+            const logoutLink = document.getElementById("logoutLink");
+
+            // Check if authToken exists in localStorage
+            if (localStorage.getItem("authToken")) {
+                loginLink.style.display = "none";
+                logoutLink.style.display = "block";
+            } else {
+                loginLink.style.display = "block";
+                logoutLink.style.display = "none";
+            }
+
+            // Handle logout functionality
+            logoutLink.addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent the default link behavior
+                localStorage.removeItem("authToken"); // Remove the auth token
+                alert("You have been logged out.");
+                loginLink.style.display = "block";
+                logoutLink.style.display = "none";
+                window.location.href = "index.html"; // Redirect after logout
+            });
+        }
+</script>
+</body>
+
+</html>

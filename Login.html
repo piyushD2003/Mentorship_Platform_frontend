@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentorship Platform</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <!-- <iframe src="navbar.html" scrolling="no" style="border: none; width: 100%; height: auto; z-index: 3;"></iframe> -->
+    <nav>
+        <div id="navbar-container"></div>
+    </nav>
+    <main>
+        <section class="login-section">
+          <div class="section-container">
+            <h2>Login to Your Account</h2>
+            <form class="login-form">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="Enter your email" required>
+    
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" placeholder="Enter your password" required>
+    
+              <button type="submit" class="btn" id="loginButton">Login</button>
+            </form>
+            <p class="create-account">
+              Not created an account? <a href="Register.html">Create one here</a>
+            </p>
+          </div>
+        </section>
+      </main>
+    <!-- Footer -->
+    <footer>
+        <div id="footer-container"></div>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+      const loginForm = document.getElementById("login-form");
+      const loginButton = document.getElementById("loginButton");
+      // const loginErrorMsg = document.getElementById("login-error-msg");
+
+      loginButton.addEventListener("click",async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          console.log(email,password);
+          
+          const apiUrl = 'https://mentorship-platfrom-backend.vercel.app/api/loginUser';
+          const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+        console.log(response.ok);
+        
+        if (response.ok) {
+          // Handle successful login
+          const data = await response.json();
+          // alert('Login successful!');
+          console.log('User data:', data.authToken);
+          localStorage.setItem("authToken", data.authToken)
+          // Redirect to user dashboard or profile page
+          alert("You have been logged in.");
+          window.location.href = 'Dashboard.html';
+        } else {
+          const errorData = await response.json();
+          console.log(errorData.message);
+          console.log(232);
+          
+          // errorMessage.textContent = errorData.message || 'Invalid credentials.';
+        }
+      })
+    </script>
+
+    <script>
+      function setupLoginLogout() {
+            const loginLink = document.getElementById("loginLink");
+            const logoutLink = document.getElementById("logoutLink");
+
+            // Check if authToken exists in localStorage
+            if (localStorage.getItem("authToken")) {
+                loginLink.style.display = "none";
+                logoutLink.style.display = "block";
+            } else {
+                loginLink.style.display = "block";
+                logoutLink.style.display = "none";
+            }
+
+            // Handle logout functionality
+            logoutLink.addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent the default link behavior
+                localStorage.removeItem("authToken"); // Remove the auth token
+                alert("You have been logged out.");
+                loginLink.style.display = "block";
+                logoutLink.style.display = "none";
+                window.location.href = "index.html"; // Redirect after logout
+            });
+        }
+    </script>
+</body>
+</html>

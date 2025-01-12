@@ -1,0 +1,65 @@
+/* Dashboard Section */
+.dashboard-section .section-container {
+    padding: 30px;
+    border: 5px solid orange;
+    border-radius: 25px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 50px auto;
+    text-align: center;
+  }
+  
+  .dashboard-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .dashboard-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .dashboard-form label {
+    font-size: 16px;
+    color: #555;
+    text-align: left;
+  }
+  
+  .dashboard-form input,
+  .dashboard-form textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .dashboard-form input:focus,
+  .dashboard-form textarea:focus {
+    outline: none;
+    border-color: orange;
+  }
+  
+  .dashboard-form textarea {
+    height: 80px;
+    resize: none;
+  }
+  
+  .dashboard-form .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: orange;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dashboard-form .btn:hover {
+    background-color: #e68000;
+  }
+  

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentorship Platform</title>
+    <link rel="stylesheet" href="Register.css">
+</head>
+<body>
+    <nav>
+        <div id="navbar-container"></div>
+    </nav>
+    <!-- Hero Section -->
+    <main>
+        <section class="register-section">
+            <div class="section-container">
+              <h2>Create an Account</h2>
+              <form class="register-form">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+      
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+      
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Create a password" required>
+      
+                <button type="submit" id="registerButton" class="btn">Register</button>
+              </form>
+              <p class="create-account">
+                Already have an account? <a href="login.html">Login here</a>
+              </p>
+            </div>
+          </section>
+    </main>
+    
+    <footer>
+        <div id="footer-container"></div>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+      const registerForm = document.getElementById("register-form");
+      const registerButton = document.getElementById("registerButton");
+      // const loginErrorMsg = document.getElementById("login-error-msg");
+
+      registerButton.addEventListener("click",async (e) => {
+          e.preventDefault();
+          const name = document.getElementById("name").value;
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          
+          const apiUrl = 'https://mentorship-platfrom-backend.vercel.app/api/Createuser';
+          const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, password }),
+        });
+        console.log(response.ok);
+        
+        if (response.ok) {
+          // Handle successful login
+          const data = await response.json();
+          // alert('Login successful!');
+          console.log('User data:', data.authToken);
+          localStorage.setItem("authToken", data.authToken)
+          alert("User successfully created")
+          // Redirect to user dashboard or profile page
+          window.location.href = 'Dashboard.html';
+        } else {
+          const errorData = await response.json();
+          console.log(errorData.message);
+          console.log(232);
+          
+          // errorMessage.textContent = errorData.message || 'Invalid credentials.';
+        }
+      })
+    </script>
+</body>
+</html>

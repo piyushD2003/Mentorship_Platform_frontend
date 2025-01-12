@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentorship Platform</title>
+    <link rel="stylesheet" href="Profile.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <!-- <iframe src="navbar.html" scrolling="no" style="border: none; width: 100%; height: auto; z-index: 3;"></iframe> -->
+    <nav>
+        <div id="navbar-container"></div>
+    </nav>
+    <!-- Hero Section -->
+    <div class="profile-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="profile-header">
+            <img src="https://via.placeholder.com/100" alt="User Avatar" class="profile-img">
+            <h2 class="profile-name" id="profile-name">Nora Tsunoda</h2>
+            <p class="profile-role" id="profile-role">Security Lead</p>
+          </div>
+          <ul class="menu">
+            <li><a href="#">Profile</a></li>
+            <button id="btn">Let's connect</button>
+          </ul>
+        </aside>
+    
+        <!-- Main Content -->
+        <main class="main-content">
+          <h3><p id="profile-name1"></p> spends most of their time on...</h3>
+          <ul class="activity-list">
+            <li ><span class="icon">📁</span><p id="info1"></p></li>
+            <li ><span class="icon">🔒</span><p id="info2"></p></li>
+            <li ><span class="icon">🛠</span> <p id="info3"></p></li>
+            <li ><span class="icon">🌐</span> <p id="info4"></p></li>
+            <li ><span class="icon">🐞</span> <p id="info5"></p></li>
+            <li ><span class="icon">🏢</span> <p id="info6"></p></li>
+          </ul>
+    
+          <h3>Works most with...</h3>
+          <div class="collaborators">
+            <img src="https://via.placeholder.com/50" alt="Collaborator">
+            <img src="https://via.placeholder.com/50" alt="Collaborator">
+            <img src="https://via.placeholder.com/50" alt="Collaborator">
+            <img src="https://via.placeholder.com/50" alt="Collaborator">
+            <img src="https://via.placeholder.com/50" alt="Collaborator">
+          </div>
+        </main>
+      </div>
+    <!-- Footer -->
+    <footer>
+        <div id="footer-container"></div>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const usernameid = params.get('usernameid');
+
+        fetch(`https://mentorship-platfrom-backend.vercel.app/api/users/${usernameid}`)
+        .then(response => response.json())
+        .then(user => {
+            
+            if(user.role !== "Mentor"){
+              document.getElementById('btn').style.visibility = "hidden"
+            }
+            console.log(user);
+            document.getElementById('profile-name').innerHTML = user.username
+            document.getElementById('profile-name1').innerHTML = user.username
+            document.getElementById('profile-role').innerHTML = user.role||"...."
+            document.getElementById('info1').innerHTML = user.skills
+            document.getElementById('info2').innerText = user.interests
+            document.getElementById('info3').innerText = user.position
+            document.getElementById('info4').innerText = user.organisation
+            document.getElementById('info5').innerText = user.bio || "...."
+            let experience = ''
+            for (key in user.experience){
+                experience = experience + `<p>${key}   :   ${user.experience[key]}</p>`
+                console.log(key, user.experience[key]);   
+            }
+
+            document.getElementById('info6').innerHTML = experience || "...."
+        })
+
+        </script>
+    <script>
+      const params1 = new URLSearchParams(window.location.search);
+      const mentor_id = params1.get('usernameid');
+      const receiver = mentor_id
+
+      const authToken = localStorage.getItem('authToken');
+      const base64Url = authToken.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(atob(base64));
+      const mentee_id=payload.user.id
+      const sender = mentee_id
+      var connection = ''
+      fetch(`https://mentorship-platfrom-backend.vercel.app/api/CheckConnection/${sender}/${receiver}`)
+        .then((response) => response.json())
+        .then((data1) => {
+          connection = data1.message; // Store all users for filtering
+          console.log(connection);
+          if(connection === true){
+            document.getElementById('btn').innerText = data1.connection['status']
+            const connectButton = document.getElementById('btn');
+
+            // Disable the button
+            connectButton.disabled = true
+          }
+          
+        })
+        .catch((error) => console.error('Error fetching user data:', error));
+      
+      connectButton = document.getElementById('btn')
+      connectButton.addEventListener("click",async (e) => {
+          // const authToken = localStorage.getItem('authToken');
+          // const base64Url = authToken.split('.')[1];
+          // const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          // const payload = JSON.parse(atob(base64));
+
+          // const mentee_id=payload.user.id
+          // const params = new URLSearchParams(window.location.search);
+          // const mentor_id = params.get('usernameid');
+          
+          e.preventDefault();
+          console.log("connect");
+          const apiUrl = 'https://mentorship-platfrom-backend.vercel.app/api/ConnectionRequest';
+          const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ sender, receiver }),
+        });
+        console.log(response.ok);
+        })
+      
+    </script>
+</body>
+
+</html>
