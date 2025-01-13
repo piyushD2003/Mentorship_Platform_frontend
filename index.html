@@ -75,7 +75,7 @@ function renderUserList(users) {
   users.forEach((user) => {
     userHTML += `
       <li>
-        <a href="profile.html?usernameid=${encodeURIComponent(user.user_id)}" class="user-link">
+        <a href="Profile.html?usernameid=${encodeURIComponent(user.user_id)}" class="user-link">
         <span class="username">${user.username}</span>
         </a>
         <span class="role">${user.role}</span>
